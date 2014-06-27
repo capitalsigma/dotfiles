@@ -69,52 +69,13 @@ and their terminal equivalents.")
 (defun my-c-mode-hook ()
   (linum-mode 1)
   (which-function-mode 1)
-  (flymake-mode 1))
-(add-hook 'c-mode-hook 'my-c-mode-hook)
-(setq c-eldoc-includes "`pkg-config gtk+-2.0 --cflags` -I./ -I../ ")
-(require 'c-eldoc)
-(load "c-eldoc")
-(add-hook 'c-mode-hook 'c-turn-on-eldoc-mode)
+  (flymake-mode 1)
+  (setq c-eldoc-includes "`pkg-config gtk+-2.0 --cflags` -I./ -I../ ")
+  (require 'c-eldoc)
+  (load "c-eldoc"))
 
-;; ;; Indentation changes for C (http://www.emacswiki.org/emacs/SmartTabs#toc2)
-(setq c-default-style "linux"
-	  c-basic-offset 4)
-(setq-default tab-width 4) ; or any other preferred value
-(setq cua-auto-tabify-rectangles nil)
-(defadvice align (around smart-tabs activate)
-  (let ((indent-tabs-mode nil)) ad-do-it))
-(defadvice align-regexp (around smart-tabs activate)
-  (let ((indent-tabs-mode nil)) ad-do-it))
-(defadvice indent-relative (around smart-tabs activate)
-  (let ((indent-tabs-mode nil)) ad-do-it))
-(defadvice indent-according-to-mode (around smart-tabs activate)
-  (let ((indent-tabs-mode indent-tabs-mode))
-	(if (memq indent-line-function
-		  '(indent-relative
-		indent-relative-maybe))
-	(setq indent-tabs-mode nil))
-	ad-do-it))
-(defmacro smart-tabs-advice (function offset)
-  `(progn
-	 (defvaralias ',offset 'tab-width)
-	 (defadvice ,function (around smart-tabs activate)
-	   (cond
-	(indent-tabs-mode
-	 (save-excursion
-	   (beginning-of-line)
-	   (while (looking-at "\t*\\( +\\)\t+")
-		 (replace-match "" nil nil nil 1)))
-	 (setq tab-width tab-width)
-	 (let ((tab-width fill-column)
-		   (,offset fill-column)
-		   (wstart (window-start)))
-	   (unwind-protect
-		   (progn ad-do-it)
-		 (set-window-start (selected-window) wstart))))
-	(t
-	 ad-do-it)))))
-(smart-tabs-advice c-indent-line c-basic-offset)
-(smart-tabs-advice c-indent-region c-basic-offset)
+(add-hook 'c-mode-hook 'my-c-mode-hook)
+(add-hook 'c-mode-hook 'c-turn-on-eldoc-mode)
 
 ;; Webmode
 (require 'web-mode)
@@ -147,10 +108,11 @@ and their terminal equivalents.")
 
 ;; And set some global  options
 (require 'flymake)
-(require 'guess-offset)
-(setq column-number-mode t)
+;; (require 'guess-offset)
+;; (setq column-number-mode t)
 (require 'install-elisp)
-(require 'revive)(require 'windows)
+(require 'revive)
+(require 'windows)
 (require 'flymake-cursor)
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
 
@@ -161,17 +123,20 @@ and their terminal equivalents.")
 ;; Python
 (setq py-python-command "python3")
 
-(defun python-hook ()
+(defun my-python-hook ()
   (setq flycheck-highlighting-mode 'lines)
   (setq indent-tabs-mode nil)
-  (setq tab-width 2))
+  (setq tab-width 2)
+  (autoload 'pylint "pylint")
+  'pylint-add-menu-items
+  'pylint-add-key-bindings
+  (setq column-enforce-mode t))
 
 
-(autoload 'pylint "pylint")
-(add-hook 'python-mode-hook 'pylint-add-menu-items)
-(add-hook 'python-mode-hook 'pylint-add-key-bindings)
-(add-hook 'python-mode-hook 'python-hook)
-(add-hook 'python-mode-hook 'column-enforce-mode)
+;; (add-hook 'python-mode-hook 'pylint-add-menu-items)
+;; (add-hook 'python-mode-hook 'pylint-add-key-bindings)
+(add-hook 'python-mode-hook 'my-python-hook)
+;; (add-hook 'python-mode-hook 'column-enforce-mode)
 ;; (setq elpy-rpc-python-command "/usr/bin/python3")
 
 
@@ -260,17 +225,17 @@ and their terminal equivalents.")
 (add-hook 'switch-frame 'on-lose-focus)
 
 
-;; Java settings
-(require 'eclim)
-(require 'eclimd)
-(custom-set-variables
- '(eclim-eclipse-dirs '("/opt/eclipse"))
- '(eclim-executable '("/opt/eclipse/eclim"))
- '(eclimd-executable '("opt/eclipse/eclimd")))
+;; Java settings -- broken
+;; (require 'eclim)
+;; (require 'eclimd)
+;; (custom-set-variables
+;;  '(eclim-eclipse-dirs '("/opt/eclipse"))
+;;  '(eclim-executable '("/opt/eclipse/eclim"))
+;;  '(eclimd-executable '("opt/eclipse/eclimd")))
 
-(defun my-java-mode-hook ()
-  (eclim-mode 1))
-(add-hook 'java-mode-hook 'my-java-mode-hook)
+;; (defun my-java-mode-hook ()
+;;   (eclim-mode 1))
+;; (add-hook 'java-mode-hook 'my-java-mode-hook)
 
 
 (require 'auto-complete-config)
