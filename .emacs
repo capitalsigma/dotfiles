@@ -44,10 +44,10 @@ and their terminal equivalents.")
 (global-set-key (kbd "M-<up>") 'windmove-up)              ; move to upper window
 (global-set-key (kbd "M-<down>") 'windmove-down)          ; move to lower window
 
-;; (global-set-key (key "M-shift-<left>") 'previous-buffer)          ; move to left windnow
-;; (global-set-key (key "M-shift-<right>") 'next-buffer)        ; move to right window
-;; (global-set-key (key "M-shift-<up>") 'windmove-up)              ; move to upper window
-;; (global-set-key (key "M-shift-<down>") 'windmove-down)          ; move to lowner window
+(global-set-key (kbd "M-S-<left>") 'previous-buffer)          ; move to left windnow
+(global-set-key (kbd "M-S-<right>") 'next-buffer)        ; move to right window
+(global-set-key (kbd "M-S-<up>") 'windmove-up)              ; move to upper window
+(global-set-key (kbd "M-S-<down>") 'windmove-down)          ; move to lowner window
 
 ;; Keybinding for "recompile"
 ;; If a previous compile exists for the buffer, run it. If not, run M-x compile
@@ -72,10 +72,10 @@ and their terminal equivalents.")
   (flymake-mode 1)
   (setq c-eldoc-includes "`pkg-config gtk+-2.0 --cflags` -I./ -I../ ")
   (require 'c-eldoc)
-  (load "c-eldoc"))
+  (load "c-eldoc")
+  'c-turn-on-eldoc-mode)
 
 (add-hook 'c-mode-hook 'my-c-mode-hook)
-(add-hook 'c-mode-hook 'c-turn-on-eldoc-mode)
 
 ;; Webmode
 (require 'web-mode)
@@ -178,22 +178,9 @@ and their terminal equivalents.")
 	  "http://marmalade-repo.org/packages/"))
 (package-initialize)
 
-;; Tabs
-;; (autoload 'smart-tabs-mode "smart-tabs-mode"
-;;   "Intelligently indent with tabs, align with spaces!")
-;; (autoload 'smart-tabs-mode-enable "smart-tabs-mode")
-;; (autoload 'smart-tabs-advice "smart-tabs-mode")
-;; (autoload 'smart-tabs-insinuate "smart-tabs-mode")
-
-;; (smart-tabs-add-language-support sml sml-mode-hook
-;;   ((sml-indent-line . sml-basic-offset)
-;;    (sml-indent-region . sml-basic-offset)))
-
-;; (smart-tabs-insinuate 'c 'c++ 'java 'sml)
 
 ;; Stupid indentation
 (require 'stupid-indent-mode)
-
 
 ;; SML stuff
 (defun my-sml-mode-hook ()
@@ -237,14 +224,18 @@ and their terminal equivalents.")
 ;;   (eclim-mode 1))
 ;; (add-hook 'java-mode-hook 'my-java-mode-hook)
 
-
-(require 'auto-complete-config)
+(require 'auto-complete)
 (ac-config-default)
+(ac-flyspell-workaround)
+;; (require 'auto-complete-config)
+
 ;; (require 'ac-emacs-eclim-source)
 ;; (require 'company)
 ;; (require 'company-emacs-eclim)
 ;; (company-emacs-eclim-setup)
 ;; (add-hook 'after-init-hook 'global-company-mode)
+
+
 
 ;; Haxe
 (require 'haxe-mode)
@@ -270,9 +261,9 @@ and their terminal equivalents.")
 (tss-config-default)
 
 (defun my-typescript-mode-hook ()
-  (setq company-mode nil))
+    (setq column-enforce-mode t))
 
-(add-hook 'typescript-mode-hook 'my-typescript-mode-hook)
+;; (add-hook 'typescript-mode-hook 'my-typescript-mode-hook)
 
 
 (custom-set-variables
