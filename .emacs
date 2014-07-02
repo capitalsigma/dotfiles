@@ -44,10 +44,14 @@ and their terminal equivalents.")
 (global-set-key (kbd "M-<up>") 'windmove-up)              ; move to upper window
 (global-set-key (kbd "M-<down>") 'windmove-down)          ; move to lower window
 
-(global-set-key (kbd "M-S-<left>") 'previous-buffer)          ; move to left windnow
-(global-set-key (kbd "M-S-<right>") 'next-buffer)        ; move to right window
-(global-set-key (kbd "M-S-<up>") 'windmove-up)              ; move to upper window
-(global-set-key (kbd "M-S-<down>") 'windmove-down)          ; move to lowner window
+(global-set-key (kbd "M-S-<left>") 'previous-buffer)          ; cycle buffer left
+(global-set-key (kbd "M-S-<right>") 'next-buffer)        ; cycle buffer right
+
+;; Alternate bindings with numpad, so we don't fuck with org-mode
+(global-set-key (kbd "M-<kp-4>") 'windmove-left)
+(global-set-key (kbd "M-<kp-6>") 'windmove-right)
+(global-set-key (kbd "M-<kp-8>") 'windmove-up)
+(global-set-key (kbd "M-<kp-2>") 'windmove-down)
 
 ;; Keybinding for "recompile"
 ;; If a previous compile exists for the buffer, run it. If not, run M-x compile
@@ -114,7 +118,14 @@ and their terminal equivalents.")
 (require 'revive)
 (require 'windows)
 (require 'flymake-cursor)
+(setq column-number-mode 1)
+
 (add-hook 'before-save-hook 'delete-trailing-whitespace)
+(setq fci-rule-column 80)
+(define-globalized-minor-mode global-fci-mode fci-mode (lambda () (fci-mode 1)))
+  (global-fci-mode 1)
+
+(setq compilation-always-kill t)
 
 
 ;; stuff for git
@@ -230,10 +241,10 @@ and their terminal equivalents.")
 ;; (require 'auto-complete-config)
 
 ;; (require 'ac-emacs-eclim-source)
-;; (require 'company)
-;; (require 'company-emacs-eclim)
-;; (company-emacs-eclim-setup)
-;; (add-hook 'after-init-hook 'global-company-mode)
+(require 'company)
+(require 'company-emacs-eclim)
+(company-emacs-eclim-setup)
+(add-hook 'after-init-hook 'global-company-mode)
 
 
 
@@ -261,7 +272,7 @@ and their terminal equivalents.")
 (tss-config-default)
 
 (defun my-typescript-mode-hook ()
-    (setq column-enforce-mode t))
+  (setq column-enforce-mode t))
 
 ;; (add-hook 'typescript-mode-hook 'my-typescript-mode-hook)
 
